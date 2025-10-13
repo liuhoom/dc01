@@ -1,7 +1,7 @@
+import { ClerkProvider } from '@clerk/nextjs'
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-
-import { ClerkProvider } from '@clerk/nextjs'
 
 import './globals.css'
 
@@ -22,7 +22,16 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorPrimary: '#6F5AF6',
+        },
+        layout: {
+          logoPlacement: 'none',
+        },
+      }}
+    >
       <html lang='en' suppressHydrationWarning>
         <body className={inter.className}>{children}</body>
       </html>
