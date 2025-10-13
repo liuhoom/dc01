@@ -10,8 +10,8 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dc01.db"
   relationMode  = "prisma"
 }
 
@@ -19,9 +19,84 @@ model Profile {
   id        String  @id @default(uuid())
   userId    String  @unique
   name      String
-  imageUrl  String  
-  email     String  
+  imageUrl  String
+  email     String
+
+  servers   Server[]
+  members   Member[]
+  channels  Channel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("profile")
 }
+
+model Server {
+  id        String  @id @default(cuid())
+  name      String
+  imageUrl  String
+  inviteCode String @unique
+
+  profileId String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  channels  Channel[]
+  members   Member[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@map("server")
+}
+
+enum MemberRole {
+  ADMIN
+  MODERATOR
+  GUEST
+}
+
+model Member {
+  id        String  @id @default(cuid())
+  role      MemberRole @default(GUEST)
+
+  profileId  String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  serverId  String
+  server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@index([serverId])
+  @@map("member")
+}
+
+enum ChannelType {
+  TEXT
+  AUDIO
+  VIDEO
+}
+
+model Channel {
+  id        String  @id @default(cuid())
+  name      String
+  type      ChannelType @default(TEXT)
+
+  profileId  String
+  profile Profile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  serverId  String
+  server Server @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([profileId])
+  @@index([serverId])
+  @@map("channel")
+}
+

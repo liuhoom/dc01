@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push",
+    "prisma:gpush": "prisma generate && prisma db push",
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
