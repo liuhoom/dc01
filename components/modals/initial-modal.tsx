@@ -1,8 +1,11 @@
 'use client'
 
 import * as z from 'zod'
+import axios from 'axios'
 import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
+
 
 import {
   Dialog,
@@ -23,6 +26,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
+import { FileUpload } from '../file-upload'
+
 const formSchema = z.object({
   name: z.string().min(1, {
     message: 'Server name is required.',
@@ -33,6 +38,8 @@ const formSchema = z.object({
 })
 
 export function InitialModal() {
+  const router = useRouter()
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -44,7 +51,15 @@ export function InitialModal() {
   const isLoading = form.formState.isSubmitting
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log(values)
+    try {
+      await axios.post('/api/servers', values)
+
+      form.reset()
+      router.refresh()
+      window.location.reload()
+    } catch (error) {
+      console.error('Error: ', error)
+    }
   }
 
   return (
@@ -68,8 +83,26 @@ export function InitialModal() {
             autoCapitalize='off'
             autoComplete='off'
           >
-            <div className='space-y-8 px-6'>
-              <div className=''>TODO: upload file</div>
+            <div className='space-y-8 px-6 flex relative flex-col items-center text-center justify-center'>
+              <div className=''>
+                <FormField
+                  name='imageUrl'
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <FileUpload
+                          endpoint='serverImage'
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 name='name'

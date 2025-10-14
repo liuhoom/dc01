@@ -33,7 +33,7 @@ model Profile {
 }
 
 model Server {
-  id        String  @id @default(cuid())
+  id        String  @id @default(uuid())
   name      String
   imageUrl  String
   inviteCode String @unique
@@ -58,7 +58,7 @@ enum MemberRole {
 }
 
 model Member {
-  id        String  @id @default(cuid())
+  id        String  @id @default(uuid())
   role      MemberRole @default(GUEST)
 
   profileId  String
@@ -82,7 +82,7 @@ enum ChannelType {
 }
 
 model Channel {
-  id        String  @id @default(cuid())
+  id        String  @id @default(uuid())
   name      String
   type      ChannelType @default(TEXT)
 
