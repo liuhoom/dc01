@@ -1,5 +1,5 @@
 import { useParams } from 'next/navigation'
 
 export default function ServerIdPage() {
-  return <div className=''>jhi</div>
+  return <div className=''>Server Id Page</div>
 }

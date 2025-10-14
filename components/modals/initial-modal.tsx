@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-
 import {
   Dialog,
   DialogContent,
@@ -44,7 +43,8 @@ export function InitialModal() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      imageUrl: '',
+      imageUrl:
+        'https://rlbgo4z40o.ufs.sh/f/DFtlc0t7qhOH3RKl8pjRd7jGFArKUksg3Lo2VOp4YxXhyDZT',
     },
   })
 
@@ -83,8 +83,8 @@ export function InitialModal() {
             autoCapitalize='off'
             autoComplete='off'
           >
-            <div className='space-y-8 px-6 flex relative flex-col items-center text-center justify-center'>
-              <div className=''>
+            <div className='space-y-8 px-6 '>
+              <div className='flex relative flex-col items-center text-center justify-center'>
                 <FormField
                   name='imageUrl'
                   control={form.control}

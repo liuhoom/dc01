@@ -6,7 +6,7 @@ import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { UploadDropzone } from '@/lib/uploadthinig'
 
-import '@uploadthing/react/styles.css'
+// import '@uploadthing/react/styles.css'
 
 interface FileUploadProps {
   value: string
