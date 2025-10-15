@@ -1,44 +1,30 @@
 'use client'
 
-import { useTheme } from 'next-themes'
 import { useCallback } from 'react'
-import { MoonIcon, SunIcon } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import { Moon, Sun } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 
-interface ThemeToggleProps {}
-
-const META_THEME_COLOR = {
-  light: '#FFFFFF',
-  dark: '#09090B',
-}
-
-export function ThemeToggle({}: ThemeToggleProps) {
+export function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme()
-
-  const setMetaColor = useCallback((color: string) => {
-    document
-      .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', color)
-  }, [])
 
   const toggleTheme = useCallback(() => {
     setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
-
-    setMetaColor(
-      resolvedTheme === 'dark' ? META_THEME_COLOR.light : META_THEME_COLOR.dark
-    )
-  }, [resolvedTheme, setTheme, setMetaColor])
+  }, [resolvedTheme, setTheme])
 
   return (
-    <Button
-      variant='ghost'
-      className='group/toggle h-8 w-8 px-0'
-      onClick={toggleTheme}
-    >
-      <SunIcon className='hidden !h-5 !w-fit [html.dark_&]:blcok' />
-      <MoonIcon className='hidden !h-5 !w-fit [html.light_&]:blcok' />
-      <span className='sr-only'>Toggle theme</span>
-    </Button>
+    <div className='flex gap-x-8 items-center'>
+      <Button
+        variant='ghost'
+        onClick={toggleTheme}
+        size='icon'
+        className='group/toggle h-10 w-10'
+      >
+        <Sun className='h-[1.4rem] w-[1.4rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90' />
+        <Moon className='h-[1.4rem] w-[1.4rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0 absolute' />
+        <span className='sr-only'>Toggle theme</span>
+      </Button>
+    </div>
   )
 }
