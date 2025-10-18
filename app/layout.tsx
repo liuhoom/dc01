@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
 import { ThemeProvider } from '@/components/providers/theme-profile'
+import ModalProvider from '@/components/providers/modal-provider'
 
 import './globals.css'
 
@@ -42,6 +43,7 @@ export default function RootLayout({
             enableSystem={false}
             storageKey='discord-theme'
           >
+            <ModalProvider />
             {children}
           </ThemeProvider>
         </body>
