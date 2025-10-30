@@ -70,7 +70,10 @@ export function ServerHeader({ server, role }: ServerHeaderProps) {
           </DropdownMenuItem>
         )}
         {isModerator && (
-          <DropdownMenuItem className='px-3 py-2 text-sm cursor-pointer'>
+          <DropdownMenuItem
+            className='px-3 py-2 text-sm cursor-pointer'
+            onClick={() => onOpen('createChannel', { server })}
+          >
             Create Channel
             <CirclePlus className='h-4 w-4 ml-auto' />
           </DropdownMenuItem>
@@ -79,7 +82,10 @@ export function ServerHeader({ server, role }: ServerHeaderProps) {
         {isModerator && <DropdownMenuSeparator />}
 
         {isAdmin && (
-          <DropdownMenuItem className='px-3 py-2 text-sm cursor-pointer text-rose-500'>
+          <DropdownMenuItem
+            className='px-3 py-2 text-sm cursor-pointer text-rose-500'
+            onClick={() => onOpen('deleteServer', { server })}
+          >
             Delete Server
             <Trash className='h-4 w-4 ml-auto' />
           </DropdownMenuItem>

@@ -24,8 +24,9 @@ export function FileUpload({ value, onChange, endpoint }: FileUploadProps) {
 
         <Button
           onClick={() => onChange('')}
+          size='icon-sm'
           type='button'
-          className='absolute top-0 right-0 rounded-full p-1 bg-rose-500 shadow-sm'
+          className='absolute top-0 right-0 rounded-full p-[2px] bg-rose-500 shadow-sm'
         >
           <X className='h-4 w-4' />
         </Button>
