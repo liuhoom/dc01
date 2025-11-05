@@ -1,7 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import * as z from 'zod'
+import axios from 'axios'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
+import { ChannelType } from '@/prisma/lib/generated/prisma'
 import { useModal } from '@/hooks/use-modal-store'
 
 import {
@@ -10,7 +15,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '../ui/dialog'
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -18,22 +23,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../ui/form'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { ChannelType } from '@/prisma/lib/generated/prisma'
-import { Input } from '../ui/input'
+} from '@/components/ui/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select'
-import { Button } from '../ui/button'
-
-interface CreateChannelModalProps {}
+} from '@/components/ui/select'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { useEffect } from 'react'
 
 const formSchema = z.object({
   name: z
@@ -47,9 +47,11 @@ const formSchema = z.object({
   type: z.enum(ChannelType),
 })
 
-export function CreateChannelModal({}: CreateChannelModalProps) {
+export function CreateChannelModal() {
   const { isOpen, onClose, type, data } = useModal()
   const { channelType } = data
+  const router = useRouter()
+  const params = useParams()
 
   const isModalOpen = isOpen && type === 'createChannel'
 
@@ -57,14 +59,36 @@ export function CreateChannelModal({}: CreateChannelModalProps) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      type: ChannelType.TEXT || channelType,
+      type: channelType || ChannelType.TEXT,
     },
   })
 
+  useEffect(() => {
+    if (channelType) form.setValue('type', channelType)
+    else form.setValue('type', ChannelType.TEXT)
+  }, [channelType, form])
+
   const isLoading = form.formState.isSubmitting
 
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      await axios.post(`/api/channels?serverId=${params?.serverId}`, values)
+
+      form.reset()
+      router.refresh()
+      onClose()
+    } catch (error) {
+      console.error('Error: ', error)
+    }
+  }
+
+  const handleClose = () => {
+    form.reset()
+    onClose()
+  }
+
   return (
-    <Dialog onOpenChange={onClose} open={isModalOpen}>
+    <Dialog onOpenChange={handleClose} open={isModalOpen}>
       <DialogContent className='p-0 overflow-hidden'>
         <DialogHeader className='pt-8 px-6'>
           <DialogTitle className='text-center font-bold text-2xl'>
@@ -74,7 +98,7 @@ export function CreateChannelModal({}: CreateChannelModalProps) {
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(() => {})}
+            onSubmit={form.handleSubmit(onSubmit)}
             className='space-y-8'
             autoCapitalize='off'
             autoComplete='off'
